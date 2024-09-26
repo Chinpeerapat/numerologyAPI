@@ -1,4 +1,4 @@
-import requests
+import httpx
 from bs4 import BeautifulSoup
 from fastapi import HTTPException
 
@@ -6,8 +6,10 @@ async def scrape_content(phone_number: str):
     url = f"https://www.somjade.com/ber/?{phone_number}"
     
     try:
-        # Send a GET request to the URL
-        response = requests.get(url)
+        # Send a GET request to the URL using httpx for async
+        async with httpx.AsyncClient() as client:
+            response = await client.get(url)
+        
         response.raise_for_status()  # Raise an exception for bad status codes
         
         # Parse the HTML content
@@ -25,7 +27,7 @@ async def scrape_content(phone_number: str):
             "paragraph_count": len(scraped_data)
         }
     
-    except requests.RequestException as e:
+    except httpx.RequestError as e:
         raise HTTPException(status_code=500, detail=f"Error fetching the URL: {str(e)}")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"An error occurred: {str(e)}")
