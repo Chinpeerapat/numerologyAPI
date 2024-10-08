@@ -4,6 +4,6 @@
     "builder": "NIXPACKS"
   },
   "deploy": {
-    "startCommand": "pip install --no-cache -r requirements.txt && uvicorn app.main:app --reload"
+    "startCommand": "pip install --no-cache -r requirements.txt && uvicorn app.main:app --reload --host $HOST --port $PORT"
   }
 }
